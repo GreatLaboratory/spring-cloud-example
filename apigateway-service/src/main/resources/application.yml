@@ -13,6 +13,12 @@ spring:
         name: apigateway-service
     cloud:
         gateway:
+            default-filters:
+                - name: GlobalFilter
+                  args:
+                      baseMessage: Spring Cloud Global Filter Base Message
+                      preLogger: true
+                      postLogger: true
             routes:
                 - id: first-service
                   uri: http://localhost:9090/
