@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping({"/first-service", "/second-service"})
 public class UserController {
@@ -14,7 +16,7 @@ public class UserController {
     private String port;
 
     private String getProfile() {
-        if (port.equals("9001")) {
+        if (port.equals("9090")) {
             return "first-service";
         } else {
             return "second-service";
@@ -22,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/welcome")
-    public String welcome() {
-        return "Welcome " + this.getProfile();
+    public String welcome(HttpServletRequest request) {
+        return "Welcome " + request.getServerPort();
     }
 
     @GetMapping("/message1")
