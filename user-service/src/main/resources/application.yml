@@ -9,7 +9,7 @@ spring:
             enabled: true
             settings:
                 web-allow-others: true
-            path: /user-service/h2-console
+            path: /h2-console
     datasource:
         driver-class-name: org.h2.Driver
         url: jdbc:h2:mem:testdb
@@ -25,3 +25,14 @@ eureka:
 
 greeting:
     message: Welcom to the user-service!!
+
+gateway:
+    ip: 10.25.17.25
+
+token:
+    expiration_time: 8640000000 # 10days
+    secret: greatlaboratory
+
+logging:
+    level:
+        com.example.userservice: DEBUG

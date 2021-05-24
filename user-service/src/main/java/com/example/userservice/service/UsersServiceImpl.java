@@ -9,6 +9,9 @@ import com.example.userservice.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,13 @@ public class UsersServiceImpl implements UsersService{
 
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder encoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("해당하는 이메일의 사용자가 존재하지 않습니다. email =" + email));
+
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(), true, true, true, true, new ArrayList<>());
+    }
 
     @Override
     public UserCreateResponseDto createUser(UserCreateRequestDto userDto) {
@@ -43,6 +53,20 @@ public class UsersServiceImpl implements UsersService{
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         UserEntity userEntity = usersRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 아이디의 사용자가 존재하지 않습니다. user id=" + userId));
+        UserReadResponseDto userReadResponseDto = modelMapper.map(userEntity, UserReadResponseDto.class);
+
+        List<OrderReadResponseDto> orderList = new ArrayList<>();
+        userReadResponseDto.setOrderList(orderList);
+
+        return userReadResponseDto;
+    }
+
+    @Override
+    public UserReadResponseDto getUserByEmail(String email) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        UserEntity userEntity = usersRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당하는 이메일의 사용자가 존재하지 않습니다. email=" + email));
         UserReadResponseDto userReadResponseDto = modelMapper.map(userEntity, UserReadResponseDto.class);
 
         List<OrderReadResponseDto> orderList = new ArrayList<>();
