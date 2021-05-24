@@ -3,3 +3,6 @@
 
 1. discovery service
 2. api-gateway service
+3. user service
+4. catalog service
+5. order service
