@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,7 @@ import java.util.Date;
 
 import static com.netflix.appinfo.EurekaAccept.compact;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -55,6 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String userName = ((User)authResult.getPrincipal()).getUsername();
         UserReadResponseDto userDetails = usersService.getUserByEmail(userName);
 
+        log.info("@@@@@@@@@@@@@@@@@@@user-service jwt ->" + env.getProperty("token.secret"));
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId()) // jwt에 들어갈 주인이 userId가 된다.
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time")))) // 만료일 설정

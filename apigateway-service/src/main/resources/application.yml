@@ -44,6 +44,14 @@ spring:
                 - id: user-service
                   uri: lb://USER-SERVICE
                   predicates:
+                      - Path=/user-service/actuator/**
+                      - Method=GET,POST
+                  filters:
+                      - RemoveRequestHeader=Cookie
+                      - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+                - id: user-service
+                  uri: lb://USER-SERVICE
+                  predicates:
                       - Path=/user-service/**
                       - Method=GET
                   filters:
@@ -65,3 +73,13 @@ spring:
 
 token:
     secret: greatlaboratory
+
+# actuator config
+management:
+    endpoint:
+        shutdown:
+            enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: refresh, health, beans, shutdown, info, httptrace

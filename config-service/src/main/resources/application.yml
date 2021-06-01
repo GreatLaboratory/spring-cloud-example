@@ -1,0 +1,28 @@
+server:
+    port: 8888
+
+spring:
+    application:
+        name: config-service
+    rabbitmq:
+        host: 127.0.0.1
+        port: 5672
+        username: guest
+        password: guest
+    cloud:
+        config:
+            server:
+                git:
+                    uri: file:C:\Users\user\Desktop\projects\config-test
+#                    remote repository에서 가져올때
+#                    uri: https://github.com/GreatLaboratory/spring-config-test.git
+#                    username: [username]
+#                    password: [password]
+
+# profile별로 조회할 땐 localhost:8888/ecommerce/dev  이런 식으로 조회하면 된다.
+# 단순 git과 remote repository 이외에도 로컬 파일로 불러오는 설정도 있다.
+management:
+    endpoints:
+      web:
+        exposure:
+            include: health, busrefresh

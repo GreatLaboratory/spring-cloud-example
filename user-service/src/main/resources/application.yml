@@ -26,13 +26,24 @@ eureka:
 greeting:
     message: Welcom to the user-service!!
 
-gateway:
-    ip: 10.25.17.25
+#gateway:
+#    ip: 10.25.17.25
+#
+#token:
+#    expiration_time: 8640000000 # 10days
+#    secret: greatlaboratory
 
-token:
-    expiration_time: 8640000000 # 10days
-    secret: greatlaboratory
-
+# logging config
 logging:
     level:
         com.example.userservice: DEBUG
+
+# actuator config
+management:
+    endpoint:
+        shutdown:
+            enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: refresh, health, beans, shutdown, info
