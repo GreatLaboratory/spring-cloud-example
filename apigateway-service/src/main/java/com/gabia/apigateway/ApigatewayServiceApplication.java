@@ -1,4 +1,4 @@
-package com.example.apigatewayservice;
+package com.gabia.apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;

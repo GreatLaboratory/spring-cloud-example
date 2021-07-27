@@ -1,8 +1,7 @@
-package com.example.apigatewayservice.filter;
+package com.gabia.apigateway.filter;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.spi.AbstractLoggerAdapter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
