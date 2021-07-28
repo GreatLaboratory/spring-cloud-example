@@ -1,5 +1,6 @@
 package com.example.userservice;
 
+import com.example.userservice.error.FeignErrorDecoder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -32,6 +33,11 @@ public class UserServiceApplication {
 	@Bean
 	public feign.Logger.Level feignLoggerLevel() {
 		return feign.Logger.Level.FULL;
+	}
+
+	@Bean
+	public FeignErrorDecoder feignErrorDecoder() {
+		return new FeignErrorDecoder();
 	}
 
 }
