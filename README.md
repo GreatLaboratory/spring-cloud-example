@@ -6,3 +6,4 @@
 3. user service
 4. catalog service
 5. order service
+6. config service

@@ -1,0 +1,8 @@
+encrypt:
+    key-store:
+        location: file:C:\Users\user\Desktop\projects\spring-cloud-example\keystore\configServerEncryptionKey.jks
+        password: greatlaboratory
+        alias: configServerEncryptionKey
+
+
+# keytool -genkeypair -alias configServerEncryptionKey -keyalg RSA -dname "CN=Kenneth Lee, OU=API Development, O=joneconsulting.co.kr, L=Seoul, C=KR" -keypass "greatlaboratory" -keystore configServerEncryptionKey.jks -storepass "greatlaboratory"
