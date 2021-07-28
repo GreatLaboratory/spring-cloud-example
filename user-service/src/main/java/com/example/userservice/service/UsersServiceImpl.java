@@ -9,11 +9,15 @@ import com.example.userservice.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,11 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class UsersServiceImpl implements UsersService{
+public class UsersServiceImpl implements UsersService {
 
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder encoder;
+    private final RestTemplate restTemplate;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -52,10 +57,20 @@ public class UsersServiceImpl implements UsersService{
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        UserEntity userEntity = usersRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 아이디의 사용자가 존재하지 않습니다. user id=" + userId));
+        UserEntity userEntity = usersRepository.findByUserId(userId).orElseThrow(() ->
+                new UsernameNotFoundException("해당하는 아이디의 사용자가 존재하지 않습니다. user id=" + userId)
+        );
         UserReadResponseDto userReadResponseDto = modelMapper.map(userEntity, UserReadResponseDto.class);
 
-        List<OrderReadResponseDto> orderList = new ArrayList<>();
+        // 1. Using RestTemplate
+        String orderUrl = String.format("http://127.0.0.1:8000/order-service/%s/orders", userId);
+        ResponseEntity<List<OrderReadResponseDto>> orderResponseList = restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<OrderReadResponseDto>>() {
+                });
+        List<OrderReadResponseDto> orderList = orderResponseList.getBody();
+
+        // 2. Using FeignClient
+
         userReadResponseDto.setOrderList(orderList);
 
         return userReadResponseDto;
